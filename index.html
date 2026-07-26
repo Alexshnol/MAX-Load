@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#074884"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>MAX Load 3.0</title>
+<title>MAX Load 3.0.1.1</title>
 <link rel="manifest" href="./manifest.json"><link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png"><link rel="apple-touch-icon" sizes="192x192" href="./icon-192.png">
 <style>
 :root{--blue:#074884;--blue2:#0b65b8;--ink:#122033;--muted:#718096;--line:#dce5ef;--bg:#f4f7fb;--good:#159447;--warn:#d98100;--bad:#cc3030;--card:#fff;--shadow:0 8px 28px rgba(24,48,76,.08)}
@@ -61,7 +61,7 @@ select{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;b
 </head>
 <body>
 <div class="app">
-<header class="header"><div class="brand"><img src="./brand-icon.png" alt="MAX Load 3.0"><div><div class="brand-title"><h1>MAX Load</h1><span class="version-chip">3.0</span></div><p>מחשבון משקל העמסה למשאיות</p></div></div><button class="reset" onclick="resetAll()">נקה הכול</button></header>
+<header class="header"><div class="brand"><img src="./brand-icon.png" alt="MAX Load 3.0.1"><div><div class="brand-title"><h1>MAX Load</h1><span class="version-chip">3.0</span></div><p>מחשבון משקל העמסה למשאיות</p></div></div><button class="reset" onclick="resetAll()">נקה הכול</button></header>
 <section class="section"><h2 class="section-title">בחירת משאית</h2><div id="truckStrip" class="truck-strip"></div></section>
 <div class="main-grid"><main>
 <section class="section"><div class="controls">
@@ -118,7 +118,7 @@ function qty(i,d){state.rows[i].qty=Math.max(0,state.rows[i].qty+d);renderRows()
 function setQty(i,v){state.rows[i].qty=Math.max(0,Number(v)||0);renderRows();calc();}
 function removeRow(i){state.rows.splice(i,1);if(!state.rows.length)addRow();else{renderRows();calc();}}
 function totals(){let fixed=(state.cart?300:0)+state.belgian*160+state.small*80;let dynamic=0;state.rows.forEach((r,i)=>{let it=ITEMS[r.item];let w=(r.status==='full'?it.full:it.empty)*r.qty;dynamic+=w;let e=document.getElementById('rw'+i);if(e)e.textContent=fmt(w)});return fixed+dynamic}
-function calc(){const usedN=totals();used.textContent=fmt(usedN);if(!state.truck){cap.textContent='—';remain.textContent='—';pct.textContent='0%';ring.style.background='conic-gradient(#159447 0deg,#e7edf3 0deg)';vehicleChip.textContent='בחר משאית';ramp.textContent='';status.className='notes-panel';status.innerHTML='<div class="notes-title">הערות ומגבלות</div><ul class="notes-list"><li>יש לבחור משאית כדי להציג את המגבלות.</li></ul>';return} const c=state.truck.capacity,p=usedN/c*100,rem=c-usedN;cap.textContent=fmt(c);remain.textContent=fmt(rem);remain.style.color=rem<0?'var(--bad)':'var(--good)';pct.textContent=Math.round(p)+'%';vehicleChip.textContent=`${state.truck.model} · ${state.truck.plate}`;let color=p>100?'var(--bad)':p>=90?'var(--warn)':'var(--good)';ring.style.background=`conic-gradient(${color} ${Math.min(p,100)*3.6}deg,#e7edf3 0deg)`;const notes=[`מגבלת רמפה לפי נתוני המשאית: ${fmt(state.truck.ramp)}.`];if(p>100){status.className='notes-panel danger';notes.unshift(`חריגה של ${fmt(-rem)} מכושר ההעמסה המותר.`)}else if(p>=90){status.className='notes-panel warning';notes.unshift(`נותרו רק ${fmt(rem)} — העמסה קרובה למגבלה.`)}else{status.className='notes-panel'}status.innerHTML=`<div class="notes-title">הערות ומגבלות</div><ul class="notes-list">${notes.map(n=>`<li>${n}</li>`).join('')}</ul>`}
+function calc(){const usedN=totals();used.textContent=fmt(usedN);if(!state.truck){cap.textContent='—';remain.textContent='—';pct.textContent='0%';ring.style.background='conic-gradient(#159447 0deg,#e7edf3 0deg)';vehicleChip.textContent='בחר משאית';ramp.textContent='';status.className='notes-panel';status.innerHTML='<div class="notes-title">הערות ומגבלות</div><ul class="notes-list"><li>יש לבחור משאית כדי להציג את המגבלות.</li></ul>';return} const c=state.truck.capacity,p=usedN/c*100,rem=c-usedN;cap.textContent=fmt(c);remain.textContent=fmt(rem);remain.style.color=rem<0?'var(--bad)':'var(--good)';pct.textContent=Math.round(p)+'%';vehicleChip.textContent=`${state.truck.model} · ${state.truck.plate}`;let color=p>100?'var(--bad)':p>=90?'var(--warn)':'var(--good)';ring.style.background=`conic-gradient(${color} ${Math.min(p,100)*3.6}deg,#e7edf3 0deg)`;const rampLimit=Number(state.truck.ramp)||0;const notes=[`מגבלת רמפה: ${fmt(rampLimit)}.`,`יש לוודא שסך הציוד שנמצא בו-זמנית על הרמפה אינו עולה על המגבלה.`];if(p>100){status.className='notes-panel danger';notes.unshift(`חריגה של ${fmt(-rem)} מכושר ההעמסה המותר.`)}else if(p>=90){status.className='notes-panel warning';notes.unshift(`נותרו רק ${fmt(rem)} — העמסה קרובה למגבלה.`)}else{status.className='notes-panel'}status.innerHTML=`<div class="notes-title">הערות ומגבלות</div><ul class="notes-list">${notes.map(n=>`<li>${n}</li>`).join('')}</ul>`}
 
 function openPlanner(){if(!plannerRows.length)plannerRows=[{item:0,status:'full',qty:1}];renderPlannerRows();document.getElementById('plannerModal').classList.add('open');document.body.style.overflow='hidden'}
 function closePlanner(){document.getElementById('plannerModal').classList.remove('open');document.body.style.overflow=''}
