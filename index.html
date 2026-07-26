@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#074884"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>MAX Load 2.0</title>
+<title>MAX Load 3.0</title>
 <link rel="manifest" href="./manifest.json"><link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png"><link rel="apple-touch-icon" sizes="192x192" href="./icon-192.png">
 <style>
 :root{--blue:#074884;--blue2:#0b65b8;--ink:#122033;--muted:#718096;--line:#dce5ef;--bg:#f4f7fb;--good:#159447;--warn:#d98100;--bad:#cc3030;--card:#fff;--shadow:0 8px 28px rgba(24,48,76,.08)}
@@ -33,8 +33,12 @@ select{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;b
 .summary{position:sticky;top:14px;background:white;border:1px solid var(--line);border-radius:22px;padding:20px;box-shadow:var(--shadow)} .sum-title{font-size:22px;font-weight:800} .vehicle-chip{margin-top:10px;background:#eef6ff;border-radius:12px;padding:10px;font-weight:700}
 .stats{margin-top:14px} .stat{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #edf1f5} .stat strong{font-size:18px}
 .ring{width:170px;height:170px;margin:18px auto;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--good) 0deg,#e7edf3 0deg);position:relative} .ring:before{content:"";position:absolute;inset:17px;border-radius:50%;background:white} .ring-content{position:relative;text-align:center} .ring-content b{font-size:40px} .ring-content span{display:block;color:var(--muted)}
-.status{border-radius:14px;padding:13px;text-align:center;font-size:20px;font-weight:800;background:#eaf8ef;color:var(--good)}
-.ramp-note{font-size:13px;color:var(--muted);text-align:center;margin-top:12px}
+.notes-panel{border-radius:16px;padding:15px 16px;background:#f1f7fd;border:1px solid #d5e6f5;color:var(--ink)}
+.notes-title{font-size:17px;font-weight:800;margin-bottom:8px;color:var(--blue)}
+.notes-list{margin:0;padding:0 20px 0 0;display:grid;gap:7px;font-size:14px;line-height:1.45}
+.notes-panel.warning{background:#fff8e8;border-color:#f1d48d}.notes-panel.warning .notes-title{color:var(--warn)}
+.notes-panel.danger{background:#fff0f0;border-color:#efb6b6}.notes-panel.danger .notes-title{color:var(--bad)}
+.ramp-note{display:none}
 .actions{position:fixed;z-index:20;bottom:0;left:0;right:0;background:#fffffff2;backdrop-filter:blur(14px);border-top:1px solid var(--line);padding:12px max(16px,env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom));display:flex;justify-content:center;gap:12px}
 .actions button{border:0;border-radius:13px;padding:14px 26px;font-weight:800;font-size:18px;cursor:pointer;min-width:180px} .pdf{background:var(--blue2);color:white} .wa{background:#18a84a;color:white}
 .mobile-summary{display:none}
@@ -44,11 +48,20 @@ select{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;b
 .print-report{display:none}
 
 .brand-title{display:flex;align-items:center;gap:10px}.version-chip{font-size:12px;font-weight:800;background:#ffb400;color:#082f57;padding:4px 8px;border-radius:999px;letter-spacing:.4px}.truck-card img{background:#eef4fb}.truck-card.active:after{content:"נבחרה";position:absolute;right:10px;top:10px;background:#074884;color:#fff;padding:5px 9px;border-radius:999px;font-size:12px;font-weight:800}.truck-card.active .check{display:none}.brand img{object-fit:cover}
+
+.plan-btn{width:100%;margin-top:14px;border:0;border-radius:14px;padding:14px 16px;background:linear-gradient(135deg,#074884,#0b65b8);color:#fff;font-weight:900;font-size:18px;cursor:pointer;box-shadow:0 7px 18px rgba(7,72,132,.18)}
+.modal-backdrop{display:none;position:fixed;inset:0;z-index:100;background:rgba(7,23,40,.58);backdrop-filter:blur(5px);padding:14px;align-items:center;justify-content:center}.modal-backdrop.open{display:flex}
+.modal{width:min(760px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:22px;box-shadow:0 24px 70px #0005}.modal-head{position:sticky;top:0;z-index:2;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--line)}.modal-head h2{margin:0;font-size:23px}.close-modal{border:0;background:#eef3f8;width:38px;height:38px;border-radius:12px;font-size:23px;cursor:pointer}.modal-body{padding:18px}.planner-intro{color:var(--muted);margin:0 0 14px;line-height:1.45}
+.plan-head,.plan-row{display:grid;grid-template-columns:1.4fr .8fr 1fr .8fr 42px;gap:9px;align-items:center}.plan-head{padding:9px 6px;color:var(--muted);font-size:13px;font-weight:800}.plan-row{padding:10px 0;border-bottom:1px solid #edf1f5}.plan-weight{font-weight:800;text-align:center}.plan-remove{border:0;background:#fff0f0;color:var(--bad);border-radius:10px;width:38px;height:38px;cursor:pointer}.planner-add{width:100%;margin-top:12px;border:1.5px dashed #7eb0df;background:#f7fbff;color:var(--blue2);border-radius:12px;padding:12px;font-weight:800;cursor:pointer}
+.preview-card{margin-top:16px;border:1px solid var(--line);border-radius:17px;padding:15px;background:#f8fbfe}.preview-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px 18px}.preview-line{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #e7edf3}.preview-line strong{font-size:17px}.preview-status{margin-top:12px;border-radius:12px;padding:12px 14px;font-weight:800}.preview-status.good{background:#eaf8ef;color:var(--good)}.preview-status.warning{background:#fff6df;color:var(--warn)}.preview-status.danger{background:#fff0f0;color:var(--bad)}
+.modal-actions{display:flex;gap:10px;padding:0 18px 18px}.modal-actions button{flex:1;border-radius:13px;padding:13px;border:1px solid var(--line);font-weight:900;font-size:17px;cursor:pointer}.cancel-plan{background:#fff;color:var(--ink)}.confirm-plan{background:var(--blue2);color:#fff;border-color:var(--blue2)!important}.confirm-plan.danger{background:var(--bad);border-color:var(--bad)!important}
+@media(max-width:640px){.modal-backdrop{padding:0;align-items:flex-end}.modal{border-radius:22px 22px 0 0;max-height:94vh}.plan-head{display:none}.plan-row{grid-template-columns:1fr 1fr;gap:8px;padding:13px 0}.plan-row .plan-item{grid-column:1/3}.plan-weight{text-align:right;background:#f5f8fb;padding:10px;border-radius:10px}.plan-remove{justify-self:end}.preview-grid{grid-template-columns:1fr}.modal-head{padding:15px}.modal-body{padding:14px}.modal-actions{padding:0 14px calc(14px + env(safe-area-inset-bottom))}}
+
 </style>
 </head>
 <body>
 <div class="app">
-<header class="header"><div class="brand"><img src="./brand-icon.png" alt="MAX Load 2.0"><div><div class="brand-title"><h1>MAX Load</h1><span class="version-chip">2.0</span></div><p>מחשבון משקל העמסה למשאיות</p></div></div><button class="reset" onclick="resetAll()">נקה הכול</button></header>
+<header class="header"><div class="brand"><img src="./brand-icon.png" alt="MAX Load 3.0"><div><div class="brand-title"><h1>MAX Load</h1><span class="version-chip">3.0</span></div><p>מחשבון משקל העמסה למשאיות</p></div></div><button class="reset" onclick="resetAll()">נקה הכול</button></header>
 <section class="section"><h2 class="section-title">בחירת משאית</h2><div id="truckStrip" class="truck-strip"></div></section>
 <div class="main-grid"><main>
 <section class="section"><div class="controls">
@@ -56,19 +69,45 @@ select{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;b
 <div class="compact-card"><h3>כלוב בלגי</h3><div class="stepper"><button onclick="changeCage('belgian',-1)">−</button><strong id="belgianCount">0</strong><button onclick="changeCage('belgian',1)">+</button></div><div class="small-note">160 ק״ג ליחידה</div></div>
 <div class="compact-card"><h3>כלוב קטן</h3><div class="stepper"><button onclick="changeCage('small',-1)">−</button><strong id="smallCount">0</strong><button onclick="changeCage('small',1)">+</button></div><div class="small-note">80 ק״ג ליחידה</div></div>
 </div>
-<div class="load-table"><div class="table-head"><div>סוג פריט</div><div>מצב</div><div>כמות</div><div>משקל</div><div></div></div><div id="rows"></div><button class="add-row" onclick="addRow()">＋ הוסף שורת פריט</button></div>
+<div class="load-table"><div class="table-head"><div>סוג פריט</div><div>מצב</div><div>כמות</div><div>משקל</div><div></div></div><div id="rows"></div><button class="add-row" onclick="addRow()">＋ הוסף שורת פריט</button><button class="plan-btn" onclick="openPlanner()">＋ אני צריך להעמיס</button></div>
 </section></main>
-<aside class="summary"><div class="sum-title">סיכום העמסה</div><div id="vehicleChip" class="vehicle-chip">בחר משאית</div><div class="stats"><div class="stat"><span>כושר העמסה</span><strong id="cap">—</strong></div><div class="stat"><span>משקל בפועל</span><strong id="used">0 ק״ג</strong></div><div class="stat"><span>נותר להעמסה</span><strong id="remain">—</strong></div></div><div id="ring" class="ring"><div class="ring-content"><b id="pct">0%</b><span>ניצול</span></div></div><div id="status" class="status">בחר משאית</div><div id="ramp" class="ramp-note"></div></aside>
+<aside class="summary"><div class="sum-title">סיכום העמסה</div><div id="vehicleChip" class="vehicle-chip">בחר משאית</div><div class="stats"><div class="stat"><span>כושר העמסה</span><strong id="cap">—</strong></div><div class="stat"><span>משקל בפועל</span><strong id="used">0 ק״ג</strong></div><div class="stat"><span>נותר להעמסה</span><strong id="remain">—</strong></div></div><div id="ring" class="ring"><div class="ring-content"><b id="pct">0%</b><span>ניצול</span></div></div><div id="status" class="notes-panel"><div class="notes-title">הערות ומגבלות</div><ul class="notes-list"><li>יש לבחור משאית כדי להציג את המגבלות.</li></ul></div><div id="ramp" class="ramp-note"></div></aside>
 </div>
 </div>
+
+<div id="plannerModal" class="modal-backdrop" onclick="backdropClose(event)">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="plannerTitle">
+    <div class="modal-head"><h2 id="plannerTitle">אני צריך להעמיס</h2><button class="close-modal" onclick="closePlanner()" aria-label="סגירה">×</button></div>
+    <div class="modal-body">
+      <p class="planner-intro">הוסף כמה פריטים שונים שתרצה. הכמות אינה מוגבלת — המערכת תחשב את המשקל הכולל ותציג יתרה או חריגה לפני האישור.</p>
+      <div class="plan-head"><div>פריט</div><div>מצב</div><div>כמות</div><div>משקל</div><div></div></div>
+      <div id="plannerRows"></div>
+      <button class="planner-add" onclick="addPlannerRow()">＋ הוסף פריט נוסף</button>
+      <div class="preview-card">
+        <div class="preview-grid">
+          <div class="preview-line"><span>משקל ההוספה</span><strong id="planAddWeight">0 ק״ג</strong></div>
+          <div class="preview-line"><span>משקל נוכחי</span><strong id="planCurrentWeight">0 ק״ג</strong></div>
+          <div class="preview-line"><span>משקל לאחר ההוספה</span><strong id="planFutureWeight">0 ק״ג</strong></div>
+          <div class="preview-line"><span>יתרה לאחר ההוספה</span><strong id="planRemaining">—</strong></div>
+          <div class="preview-line"><span>ניצול צפוי</span><strong id="planPct">—</strong></div>
+        </div>
+        <div id="planStatus" class="preview-status good">בחר משאית כדי לבדוק את ההוספה מול כושר ההעמסה.</div>
+      </div>
+    </div>
+    <div class="modal-actions"><button class="cancel-plan" onclick="closePlanner()">ביטול</button><button id="confirmPlanBtn" class="confirm-plan" onclick="applyPlanner()">הוסף להעמסה</button></div>
+  </div>
+</div>
+
 <div class="actions"><button class="pdf" onclick="printReport()">הפק דוח PDF</button><button class="wa" onclick="shareReport()">WhatsApp</button></div>
 <div id="printReport" class="print-report"></div>
 <script>
 const TRUCKS=[{"id":"v1","model":"IVECO","plate":"80-430-203","gross":7200,"tare":3912,"capacity":3288,"type":"רכב מדיקל","ramp":1500,"img":"./iveco.jpg"},{"id":"v2","model":"IVECO","plate":"11-111-1","gross":7200,"tare":3912,"capacity":3288,"type":"רכב מדיקל","ramp":1500,"img":"./iveco.jpg"},{"id":"v3","model":"DAF","plate":"11-112-39","gross":12000,"tare":6169,"capacity":5831,"type":"רכב תעשייתי","ramp":2000,"img":"./daf.jpg"},{"id":"v4","model":"DAF","plate":"66-032-901","gross":12000,"tare":6030,"capacity":5970,"type":"רכב תעשייתי","ramp":2000,"img":"./daf.jpg"},{"id":"v5","model":"DAF","plate":"65-941-901","gross":12000,"tare":6250,"capacity":5750,"type":"רכב תעשייתי","ramp":2000,"img":"./daf.jpg"},{"id":"v6","model":"DAF","plate":"10-983-39","gross":12000,"tare":5880,"capacity":6120,"type":"רכב תעשייתי","ramp":2000,"img":"./daf.jpg"}];
 const ITEMS=[{"name": "גליל גז", "empty": 54, "full": 64}, {"name": "גליל נוזל", "empty": 54, "full": 80}, {"name": "גליל קטן", "empty": 3, "full": 3.5}, {"name": "דיואר", "empty": 150, "full": 420}, {"name": "סוללת 6", "empty": 420, "full": 480}, {"name": "סוללת 12", "empty": 680, "full": 800}, {"name": "סוללת 24", "empty": 1700, "full": 1940}, {"name": "סוללת 36", "empty": 2020, "full": 2380}, {"name": "סוללת פדח 4", "empty": 372, "full": 480}];
+const PLANNER_ITEMS=[...ITEMS.map((x,i)=>({...x,kind:'dynamic',itemIndex:i})),{name:'כלוב בלגי',empty:160,full:160,kind:'belgian'},{name:'כלוב קטן',empty:80,full:80,kind:'small'}];
+let plannerRows=[];
 let state={truck:null,cart:false,belgian:0,small:0,rows:[]};
 const fmt=n=>new Intl.NumberFormat('he-IL',{maximumFractionDigits:1}).format(n)+' ק״ג';
-function init(){renderTrucks();addRow();calc();}
+function init(){renderTrucks();addRow();plannerRows=[{item:0,status:'full',qty:1}];calc();}
 function renderTrucks(){const s=document.getElementById('truckStrip');s.innerHTML='';TRUCKS.forEach(t=>{const el=document.createElement('button');el.className='truck-card'+(state.truck?.id===t.id?' active':'');el.innerHTML=`<span class="check">✓</span><img src="${t.img}" alt="${t.model}"><div class="truck-info"><div class="plate">${t.plate}</div><div class="meta">${t.model} · ${t.type}</div><div class="cap">כושר העמסה: ${fmt(t.capacity)}</div></div>`;el.onclick=()=>{state.truck=t;renderTrucks();calc();};s.appendChild(el)})}
 function setCart(v){state.cart=v;cartNo.classList.toggle('active',!v);cartYes.classList.toggle('active',v);calc();}
 function changeCage(k,d){state[k]=Math.max(0,state[k]+d);document.getElementById(k+'Count').textContent=state[k];calc();}
@@ -79,11 +118,25 @@ function qty(i,d){state.rows[i].qty=Math.max(0,state.rows[i].qty+d);renderRows()
 function setQty(i,v){state.rows[i].qty=Math.max(0,Number(v)||0);renderRows();calc();}
 function removeRow(i){state.rows.splice(i,1);if(!state.rows.length)addRow();else{renderRows();calc();}}
 function totals(){let fixed=(state.cart?300:0)+state.belgian*160+state.small*80;let dynamic=0;state.rows.forEach((r,i)=>{let it=ITEMS[r.item];let w=(r.status==='full'?it.full:it.empty)*r.qty;dynamic+=w;let e=document.getElementById('rw'+i);if(e)e.textContent=fmt(w)});return fixed+dynamic}
-function calc(){const usedN=totals();used.textContent=fmt(usedN);if(!state.truck){cap.textContent='—';remain.textContent='—';pct.textContent='0%';status.textContent='בחר משאית';status.style='';ring.style.background='conic-gradient(#159447 0deg,#e7edf3 0deg)';vehicleChip.textContent='בחר משאית';ramp.textContent='';return} const c=state.truck.capacity,p=usedN/c*100,rem=c-usedN;cap.textContent=fmt(c);remain.textContent=fmt(rem);remain.style.color=rem<0?'var(--bad)':'var(--good)';pct.textContent=Math.round(p)+'%';vehicleChip.textContent=`${state.truck.model} · ${state.truck.plate}`;ramp.textContent=`מגבלת רמפה לפי הנתונים: ${fmt(state.truck.ramp)}`;let color=p>100?'var(--bad)':p>=90?'var(--warn)':'var(--good)';ring.style.background=`conic-gradient(${color} ${Math.min(p,100)*3.6}deg,#e7edf3 0deg)`;status.style.background=p>100?'#fdecec':p>=90?'#fff4df':'#eaf8ef';status.style.color=color;status.textContent=p>100?`חריגה של ${fmt(-rem)}`:p>=90?'קרוב למגבלה':'תקין להעמסה'}
+function calc(){const usedN=totals();used.textContent=fmt(usedN);if(!state.truck){cap.textContent='—';remain.textContent='—';pct.textContent='0%';ring.style.background='conic-gradient(#159447 0deg,#e7edf3 0deg)';vehicleChip.textContent='בחר משאית';ramp.textContent='';status.className='notes-panel';status.innerHTML='<div class="notes-title">הערות ומגבלות</div><ul class="notes-list"><li>יש לבחור משאית כדי להציג את המגבלות.</li></ul>';return} const c=state.truck.capacity,p=usedN/c*100,rem=c-usedN;cap.textContent=fmt(c);remain.textContent=fmt(rem);remain.style.color=rem<0?'var(--bad)':'var(--good)';pct.textContent=Math.round(p)+'%';vehicleChip.textContent=`${state.truck.model} · ${state.truck.plate}`;let color=p>100?'var(--bad)':p>=90?'var(--warn)':'var(--good)';ring.style.background=`conic-gradient(${color} ${Math.min(p,100)*3.6}deg,#e7edf3 0deg)`;const notes=[`מגבלת רמפה לפי נתוני המשאית: ${fmt(state.truck.ramp)}.`];if(p>100){status.className='notes-panel danger';notes.unshift(`חריגה של ${fmt(-rem)} מכושר ההעמסה המותר.`)}else if(p>=90){status.className='notes-panel warning';notes.unshift(`נותרו רק ${fmt(rem)} — העמסה קרובה למגבלה.`)}else{status.className='notes-panel'}status.innerHTML=`<div class="notes-title">הערות ומגבלות</div><ul class="notes-list">${notes.map(n=>`<li>${n}</li>`).join('')}</ul>`}
+
+function openPlanner(){if(!plannerRows.length)plannerRows=[{item:0,status:'full',qty:1}];renderPlannerRows();document.getElementById('plannerModal').classList.add('open');document.body.style.overflow='hidden'}
+function closePlanner(){document.getElementById('plannerModal').classList.remove('open');document.body.style.overflow=''}
+function backdropClose(e){if(e.target.id==='plannerModal')closePlanner()}
+function addPlannerRow(){plannerRows.push({item:0,status:'full',qty:1});renderPlannerRows()}
+function removePlannerRow(i){plannerRows.splice(i,1);if(!plannerRows.length)plannerRows.push({item:0,status:'full',qty:1});renderPlannerRows()}
+function updatePlannerRow(i,k,v){plannerRows[i][k]=k==='item'?Number(v):v;renderPlannerRows()}
+function plannerQty(i,d){plannerRows[i].qty=Math.max(0,(Number(plannerRows[i].qty)||0)+d);renderPlannerRows()}
+function setPlannerQty(i,v){plannerRows[i].qty=Math.max(0,Number(v)||0);renderPlannerRows()}
+function plannerWeight(r){const it=PLANNER_ITEMS[r.item];return (r.status==='full'?it.full:it.empty)*r.qty}
+function renderPlannerRows(){const box=document.getElementById('plannerRows');if(!box)return;box.innerHTML='';plannerRows.forEach((r,i)=>{const it=PLANNER_ITEMS[r.item];const fixed=it.kind!=='dynamic';const el=document.createElement('div');el.className='plan-row';el.innerHTML=`<select class="plan-item" onchange="updatePlannerRow(${i},'item',this.value)">${PLANNER_ITEMS.map((x,j)=>`<option value="${j}" ${j===r.item?'selected':''}>${x.name}</option>`).join('')}</select><select onchange="updatePlannerRow(${i},'status',this.value)" ${fixed?'disabled':''}><option value="full" ${r.status==='full'?'selected':''}>מלא</option><option value="empty" ${r.status==='empty'?'selected':''}>ריק</option></select><div class="qty"><button onclick="plannerQty(${i},-1)">−</button><input value="${r.qty}" inputmode="decimal" onchange="setPlannerQty(${i},this.value)"><button onclick="plannerQty(${i},1)">+</button></div><div class="plan-weight">${fmt(plannerWeight(r))}</div><button class="plan-remove" onclick="removePlannerRow(${i})">🗑</button>`;box.appendChild(el)});calcPlanner()}
+function calcPlanner(){const addW=plannerRows.reduce((sum,r)=>sum+plannerWeight(r),0);const current=totals();const future=current+addW;planAddWeight.textContent=fmt(addW);planCurrentWeight.textContent=fmt(current);planFutureWeight.textContent=fmt(future);const btn=document.getElementById('confirmPlanBtn');btn.classList.remove('danger');if(!state.truck){planRemaining.textContent='—';planPct.textContent='—';planStatus.className='preview-status warning';planStatus.textContent='בחר משאית כדי לבדוק את ההוספה מול כושר ההעמסה.';return}const rem=state.truck.capacity-future,p=future/state.truck.capacity*100;planRemaining.textContent=fmt(rem);planRemaining.style.color=rem<0?'var(--bad)':'var(--good)';planPct.textContent=Math.round(p)+'%';if(rem<0){planStatus.className='preview-status danger';planStatus.textContent=`ההוספה תגרום לחריגה של ${fmt(-rem)}.`;btn.classList.add('danger')}else if(p>=90){planStatus.className='preview-status warning';planStatus.textContent=`ההוספה אפשרית, אך תישאר יתרה של ${fmt(rem)} בלבד.`}else{planStatus.className='preview-status good';planStatus.textContent=`ההוספה אפשרית. תישאר יתרה של ${fmt(rem)}.`}}
+function applyPlanner(){plannerRows.forEach(r=>{if(!r.qty)return;const it=PLANNER_ITEMS[r.item];if(it.kind==='belgian')state.belgian+=r.qty;else if(it.kind==='small')state.small+=r.qty;else state.rows.push({item:it.itemIndex,status:r.status,qty:r.qty})});belgianCount.textContent=state.belgian;smallCount.textContent=state.small;renderRows();calc();plannerRows=[{item:0,status:'full',qty:1}];closePlanner()}
+
 function reportHtml(){const t=state.truck;const now=new Date().toLocaleString('he-IL');const rows=state.rows.map(r=>{const it=ITEMS[r.item],w=(r.status==='full'?it.full:it.empty)*r.qty;return `<tr><td>${it.name}</td><td>${r.status==='full'?'מלא':'ריק'}</td><td>${r.qty}</td><td>${fmt(w)}</td></tr>`}).join('');return `<div style="direction:rtl;font-family:Arial;padding:28px"><div style="display:flex;align-items:center;gap:15px;border-bottom:3px solid #074884;padding-bottom:15px"><img src="./brand-icon.png" style="width:70px;border-radius:16px"><div><h1 style="margin:0;color:#074884">MAX Load</h1><div>דוח העמסת משאית</div></div></div><p><b>תאריך ושעה:</b> ${now}</p><p><b>משאית:</b> ${t?t.model+' · '+t.plate:'לא נבחרה'}</p><p><b>כושר העמסה:</b> ${t?fmt(t.capacity):'—'}</p><table style="width:100%;border-collapse:collapse;margin-top:20px"><thead><tr style="background:#074884;color:#fff"><th style="padding:10px">פריט</th><th>מצב</th><th>כמות</th><th>משקל</th></tr></thead><tbody><tr><td style="padding:8px;border-bottom:1px solid #ddd">עגלה</td><td colspan="2" style="border-bottom:1px solid #ddd">${state.cart?'יש':'אין'}</td><td style="border-bottom:1px solid #ddd">${state.cart?fmt(300):fmt(0)}</td></tr><tr><td style="padding:8px;border-bottom:1px solid #ddd">כלוב בלגי</td><td colspan="2" style="border-bottom:1px solid #ddd">${state.belgian}</td><td style="border-bottom:1px solid #ddd">${fmt(state.belgian*160)}</td></tr><tr><td style="padding:8px;border-bottom:1px solid #ddd">כלוב קטן</td><td colspan="2" style="border-bottom:1px solid #ddd">${state.small}</td><td style="border-bottom:1px solid #ddd">${fmt(state.small*80)}</td></tr>${rows}</tbody></table><div style="margin-top:24px;border:2px solid #074884;border-radius:16px;padding:18px;font-size:20px"><div><b>סה״כ משקל:</b> ${fmt(totals())}</div><div><b>יתרה:</b> ${t?fmt(t.capacity-totals()):'—'}</div></div></div>`}
 function printReport(){document.getElementById('printReport').innerHTML=reportHtml();setTimeout(()=>window.print(),80)}
 async function shareReport(){const text=`MAX Load%0Aמשאית: ${state.truck?state.truck.model+' '+state.truck.plate:'לא נבחרה'}%0Aמשקל בפועל: ${fmt(totals())}%0Aיתרה: ${state.truck?fmt(state.truck.capacity-totals()):'—'}`;window.open('https://wa.me/?text='+text,'_blank')}
-function resetAll(){state={truck:null,cart:false,belgian:0,small:0,rows:[]};cartNo.classList.add('active');cartYes.classList.remove('active');belgianCount.textContent='0';smallCount.textContent='0';addRow();renderTrucks();calc()}
+function resetAll(){state={truck:null,cart:false,belgian:0,small:0,rows:[]};plannerRows=[{item:0,status:'full',qty:1}];cartNo.classList.add('active');cartYes.classList.remove('active');belgianCount.textContent='0';smallCount.textContent='0';addRow();renderTrucks();calc()}
 if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('./service-worker.js').catch(()=>{});
 init();
 </script>

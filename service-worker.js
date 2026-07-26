@@ -1,4 +1,4 @@
-const CACHE = 'max-load-v2.0.0';
+const CACHE = 'max-load-v3.0.0';
 const ASSETS = [
   './',
   './index.html',
