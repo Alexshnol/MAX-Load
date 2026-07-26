@@ -1,4 +1,4 @@
-const CACHE = 'max-load-v2';
+const CACHE = 'max-load-v2.0.0';
 const ASSETS = [
   './',
   './index.html',
@@ -6,6 +6,7 @@ const ASSETS = [
   './icon-64.png',
   './icon-192.png',
   './icon-512.png',
+  './brand-icon.png',
   './daf.jpg',
   './iveco.jpg'
 ];
