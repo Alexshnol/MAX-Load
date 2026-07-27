@@ -1,0 +1,177 @@
+{
+  "version": "3.2",
+  "trucks": [
+    {
+      "id": "v1",
+      "model": "IVECO",
+      "plate": "80-430-203",
+      "gross": 7200.0,
+      "tare": 3912.0,
+      "capacity": 3288.0,
+      "type": "רכב מדיקל",
+      "ramp": 1500.0,
+      "img": "./iveco.jpg",
+      "displayName": "IVECO מדיקל · 80-430-203"
+    },
+    {
+      "id": "v2",
+      "model": "IVECO",
+      "plate": "67-793-404",
+      "gross": 7200.0,
+      "tare": 3930.0,
+      "capacity": 3270.0,
+      "type": "רכב מדיקל",
+      "ramp": 1500.0,
+      "img": "./iveco.jpg",
+      "displayName": "IVECO מדיקל · 67793404"
+    },
+    {
+      "id": "v3",
+      "model": "DAF",
+      "plate": "11-112-39",
+      "gross": 12000.0,
+      "tare": 6169.0,
+      "capacity": 5831.0,
+      "type": "רכב תעשייתי",
+      "ramp": 2000.0,
+      "img": "./daf.jpg",
+      "displayName": "DAF תעשייתי · 11-112-39"
+    },
+    {
+      "id": "v4",
+      "model": "DAF",
+      "plate": "66-032-901",
+      "gross": 12000.0,
+      "tare": 6030.0,
+      "capacity": 5970.0,
+      "type": "רכב תעשייתי",
+      "ramp": 2000.0,
+      "img": "./daf.jpg",
+      "displayName": "DAF תעשייתי · 66-032-901"
+    },
+    {
+      "id": "v5",
+      "model": "DAF",
+      "plate": "65-941-901",
+      "gross": 12000.0,
+      "tare": 6250.0,
+      "capacity": 5750.0,
+      "type": "רכב תעשייתי",
+      "ramp": 2000.0,
+      "img": "./daf.jpg",
+      "displayName": "DAF תעשייתי · 65-941-901"
+    },
+    {
+      "id": "v6",
+      "model": "DAF",
+      "plate": "10-983-39",
+      "gross": 12000.0,
+      "tare": 5880.0,
+      "capacity": 6120.0,
+      "type": "רכב תעשייתי",
+      "ramp": 2000.0,
+      "img": "./daf.jpg",
+      "displayName": "DAF תעשייתי · 10-983-39"
+    }
+  ],
+  "items": [
+    {
+      "id": "i1",
+      "name": "גליל גז",
+      "empty": 54.0,
+      "full": 64.0,
+      "category": "גלילים"
+    },
+    {
+      "id": "i2",
+      "name": "גליל נוזל",
+      "empty": 54.0,
+      "full": 80.0,
+      "category": "גלילים"
+    },
+    {
+      "id": "i3",
+      "name": "גליל גז קטן",
+      "empty": 3.0,
+      "full": 3.5,
+      "category": "גלילים"
+    },
+    {
+      "id": "i4",
+      "name": "דיואר",
+      "empty": 150.0,
+      "full": 420.0,
+      "category": "מכלים"
+    },
+    {
+      "id": "i5",
+      "name": "סוללת 6",
+      "empty": 420.0,
+      "full": 480.0,
+      "category": "סוללות"
+    },
+    {
+      "id": "i6",
+      "name": "סוללת 12",
+      "empty": 680.0,
+      "full": 800.0,
+      "category": "סוללות"
+    },
+    {
+      "id": "i7",
+      "name": "סוללת 24",
+      "empty": 1700.0,
+      "full": 1940.0,
+      "category": "סוללות"
+    },
+    {
+      "id": "i8",
+      "name": "סוללת 36",
+      "empty": 2020.0,
+      "full": 2380.0,
+      "category": "סוללות"
+    },
+    {
+      "id": "i9",
+      "name": "סוללת פדח 4",
+      "empty": 372.0,
+      "full": 480.0,
+      "category": "סוללות"
+    }
+  ],
+  "fixedItems": [
+    {
+      "id": "f1",
+      "name": "עגלה",
+      "weight": 300.0,
+      "input": "כן/לא",
+      "planner": false
+    },
+    {
+      "id": "f2",
+      "name": "כלוב בלגי",
+      "weight": 160.0,
+      "input": "כמות",
+      "planner": true
+    },
+    {
+      "id": "f3",
+      "name": "כלוב 9",
+      "weight": 80.0,
+      "input": "כמות",
+      "planner": true
+    }
+  ],
+  "constants": {
+    "data_version": "3.2",
+    "app_version": "3.1",
+    "weight_unit": "ק״ג",
+    "warning_threshold_pct": 90,
+    "overload_threshold_pct": 100,
+    "default_quantity": 1,
+    "default_item_id": "i1",
+    "default_status": "מלא",
+    "ramp_message": "יש לוודא שסך הציוד שנמצא בו־זמנית על הרמפה אינו עולה על המגבלה.",
+    "show_truck_images": "כן"
+  }
+}

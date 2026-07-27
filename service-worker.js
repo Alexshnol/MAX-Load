@@ -1,46 +1,10 @@
-const CACHE = 'max-load-v3.0.1';
-const ASSETS = [
-  './manifest.json',
-  './icon-64.png',
-  './icon-192.png',
-  './icon-512.png',
-  './brand-icon.png',
-  './daf.jpg',
-  './iveco.jpg'
-];
-
-self.addEventListener('install', event => {
-  self.skipWaiting();
-  event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)));
-});
-
-self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys().then(keys => Promise.all(
-      keys.filter(key => key !== CACHE).map(key => caches.delete(key))
-    )).then(() => self.clients.claim())
-  );
-});
-
-self.addEventListener('fetch', event => {
-  const request = event.request;
-  if (request.mode === 'navigate') {
-    event.respondWith(
-      fetch(request)
-        .then(response => {
-          const copy = response.clone();
-          caches.open(CACHE).then(cache => cache.put('./index.html', copy));
-          return response;
-        })
-        .catch(() => caches.match('./index.html'))
-    );
-    return;
-  }
-  event.respondWith(
-    caches.match(request).then(cached => cached || fetch(request).then(response => {
-      const copy = response.clone();
-      caches.open(CACHE).then(cache => cache.put(request, copy));
-      return response;
-    }))
-  );
+const CACHE='max-load-3.2.0';
+const CORE=['./','./index.html','./manifest.json','./brand-icon.png','./iveco.jpg','./daf.jpg','./icon-192.png','./icon-512.png'];
+self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting())));
+self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
+self.addEventListener('fetch',e=>{
+  if(e.request.method!=='GET')return;
+  e.respondWith(caches.match(e.request).then(cached=>cached||fetch(e.request).then(resp=>{
+    const copy=resp.clone(); caches.open(CACHE).then(c=>c.put(e.request,copy)); return resp;
+  }).catch(()=>caches.match('./index.html'))));
 });
