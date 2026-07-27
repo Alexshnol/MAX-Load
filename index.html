@@ -2,9 +2,9 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#074884"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>MAX Load 3.2</title>
-<link rel="manifest" href="./manifest.json"><link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png"><link rel="apple-touch-icon" sizes="192x192" href="./icon-192.png">
+<meta name="theme-color" content="#074884"><meta name="mobile-web-app-capable" content="yes"><meta name="application-name" content="MAX Load"><meta name="apple-mobile-web-app-title" content="MAX Load"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>MAX Load 4.0</title>
+<link rel="manifest" href="./manifest.webmanifest"><link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png"><link rel="apple-touch-icon" sizes="192x192" href="./icon-192.png"><link rel="apple-touch-icon" sizes="512x512" href="./icon-512.png">
 <style>
 :root{--blue:#074884;--blue2:#0b65b8;--ink:#122033;--muted:#718096;--line:#dce5ef;--bg:#f4f7fb;--good:#159447;--warn:#d98100;--bad:#cc3030;--card:#fff;--shadow:0 8px 28px rgba(24,48,76,.08)}
 *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,"Noto Sans Hebrew",sans-serif;padding-bottom:96px} button,input,select{font:inherit}
@@ -57,11 +57,21 @@ select{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;b
 .modal-actions{display:flex;gap:10px;padding:0 18px 18px}.modal-actions button{flex:1;border-radius:13px;padding:13px;border:1px solid var(--line);font-weight:900;font-size:17px;cursor:pointer}.cancel-plan{background:#fff;color:var(--ink)}.confirm-plan{background:var(--blue2);color:#fff;border-color:var(--blue2)!important}.confirm-plan.danger{background:var(--bad);border-color:var(--bad)!important}
 @media(max-width:640px){.modal-backdrop{padding:0;align-items:flex-end}.modal{border-radius:22px 22px 0 0;max-height:94vh}.plan-head{display:none}.plan-row{grid-template-columns:1fr 1fr;gap:8px;padding:13px 0}.plan-row .plan-item{grid-column:1/3}.plan-weight{text-align:right;background:#f5f8fb;padding:10px;border-radius:10px}.plan-remove{justify-self:end}.preview-grid{grid-template-columns:1fr}.modal-head{padding:15px}.modal-body{padding:14px}.modal-actions{padding:0 14px calc(14px + env(safe-area-inset-bottom))}}
 
+
+.install-bar{display:flex;align-items:center;gap:10px;margin-top:12px;padding:12px 14px;border-radius:14px;background:#eaf4ff;border:1px solid #bddcff;color:#073b6c}
+.install-bar[hidden]{display:none}.install-bar strong{flex:1}.install-btn{border:0;border-radius:11px;padding:10px 15px;background:#074884;color:#fff;font-weight:900;cursor:pointer}.install-close{border:0;background:transparent;color:#54718b;font-size:22px;cursor:pointer;padding:4px}
+.install-help{display:none;position:fixed;inset:0;z-index:150;background:#071728aa;backdrop-filter:blur(4px);padding:16px;align-items:center;justify-content:center}.install-help.open{display:flex}.install-help-card{background:#fff;width:min(520px,100%);border-radius:22px;padding:22px;box-shadow:0 25px 70px #0005}.install-help-card h2{margin-top:0}.install-help-card ol{line-height:1.8;padding-right:24px}.install-help-card button{width:100%;border:0;background:#074884;color:#fff;border-radius:12px;padding:12px;font-weight:800}
 </style>
 </head>
 <body>
 <div class="app">
-<header class="header"><div class="brand"><img src="./brand-icon.png" alt="MAX Load 3.0.1"><div><div class="brand-title"><h1>MAX Load</h1><span class="version-chip">3.0</span></div><p>מחשבון משקל העמסה למשאיות</p></div></div><button class="reset" onclick="resetAll()">נקה הכול</button></header>
+<header class="header"><div class="brand"><img src="./brand-icon.png" alt="MAX Load 4.0"><div><div class="brand-title"><h1>MAX Load</h1><span class="version-chip">4.0</span></div><p>מחשבון משקל העמסה למשאיות</p></div></div><button class="reset" onclick="resetAll()">נקה הכול</button></header>
+<div id="installBar" class="install-bar" hidden>
+  <strong id="installText">התקן את MAX Load במסך הבית</strong>
+  <button id="installBtn" class="install-btn" type="button">התקנה</button>
+  <button class="install-close" type="button" aria-label="סגור" onclick="dismissInstall()">×</button>
+</div>
+
 <section class="section"><h2 class="section-title">בחירת משאית</h2><div id="truckStrip" class="truck-strip"></div></section>
 <div class="main-grid"><main>
 <section class="section"><div class="controls">
@@ -143,7 +153,53 @@ function reportHtml(){const t=state.truck;const now=new Date().toLocaleString('h
 function printReport(){document.getElementById('printReport').innerHTML=reportHtml();setTimeout(()=>window.print(),80)}
 async function shareReport(){const text=`MAX Load%0Aמשאית: ${state.truck?state.truck.model+' '+state.truck.plate:'לא נבחרה'}%0Aמשקל בפועל: ${fmt(totals())}%0Aיתרה: ${state.truck?fmt(state.truck.capacity-totals()):'—'}`;window.open('https://wa.me/?text='+text,'_blank')}
 function resetAll(){state={truck:null,cart:false,belgian:0,small:0,rows:[]};plannerRows=[{item:0,status:'full',qty:1}];cartNo.classList.add('active');cartYes.classList.remove('active');belgianCount.textContent='0';smallCount.textContent='0';addRow();renderTrucks();calc()}
-if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('./service-worker.js').catch(()=>{});
+let deferredInstallPrompt = null;
+const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+const installBar = document.getElementById('installBar');
+const installBtn = document.getElementById('installBtn');
+
+function showInstallBar(){
+  if(!isStandalone && localStorage.getItem('hideInstallBar') !== '1') installBar.hidden = false;
+}
+function dismissInstall(){ installBar.hidden = true; localStorage.setItem('hideInstallBar','1'); }
+function closeInstallHelp(){ document.getElementById('installHelp').classList.remove('open'); }
+function showInstallHelp(){
+  const box=document.getElementById('installHelpContent');
+  box.innerHTML=isIOS
+    ? '<ol><li>פתח את הקישור ב-Safari.</li><li>לחץ על כפתור השיתוף.</li><li>בחר „הוסף למסך הבית”.</li><li>לחץ „הוסף”.</li></ol>'
+    : '<ol><li>פתח את תפריט הדפדפן ⋮.</li><li>בחר „התקנת אפליקציה” או „הוספה למסך הבית”.</li><li>אשר את ההתקנה.</li></ol><p>אם האפשרות אינה מופיעה, רענן את הדף ונסה שוב לאחר מספר שניות.</p>';
+  document.getElementById('installHelp').classList.add('open');
+}
+
+window.addEventListener('beforeinstallprompt', event => {
+  event.preventDefault();
+  deferredInstallPrompt = event;
+  showInstallBar();
+});
+window.addEventListener('appinstalled', () => { deferredInstallPrompt=null; installBar.hidden=true; });
+installBtn.addEventListener('click', async () => {
+  if(deferredInstallPrompt){
+    deferredInstallPrompt.prompt();
+    await deferredInstallPrompt.userChoice;
+    deferredInstallPrompt=null;
+    installBar.hidden=true;
+  } else showInstallHelp();
+});
+
+if('serviceWorker' in navigator && (location.protocol==='https:' || location.hostname==='localhost')) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js', {scope:'./'}).catch(console.error));
+}
+if(isIOS) showInstallBar();
+setTimeout(() => { if(!isStandalone && !deferredInstallPrompt) showInstallBar(); }, 2500);
 init();
 </script>
+
+<div id="installHelp" class="install-help" onclick="if(event.target===this)closeInstallHelp()">
+ <div class="install-help-card" dir="rtl">
+  <h2>הוספה למסך הבית</h2>
+  <div id="installHelpContent"></div>
+  <button type="button" onclick="closeInstallHelp()">הבנתי</button>
+ </div>
+</div>
 </body></html>
