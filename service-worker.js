@@ -1,4 +1,4 @@
-const CACHE_NAME = 'max-load-v4.2.0';
+const CACHE_NAME = 'max-load-v4.3.0';
 const APP_SHELL = [
   './', './index.html', './manifest.webmanifest', './manifest.json',
   './brand-icon.png', './iveco.jpg', './daf.jpg',
