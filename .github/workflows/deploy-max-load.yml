@@ -1,0 +1,39 @@
+name: Deploy MAX Load 5.8
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'MAX_Load_5.8_GitHub_Pages.zip'
+      - '.github/workflows/deploy-max-load.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - name: Unpack MAX Load 5.8
+        run: |
+          mkdir -p extracted site
+          unzip -q MAX_Load_5.8_GitHub_Pages.zip -d extracted
+          cp -a extracted/build/MAX-Load-5.8-GitHub-Ready/. site/
+          test -f site/index.html
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
+      - id: deployment
+        uses: actions/deploy-pages@v4
